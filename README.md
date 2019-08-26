@@ -14,5 +14,7 @@ Music:
 
 Sound FX:
 
+Art: Aseprite
+
 All other game content and/or art was made by me during the jam time!
 
