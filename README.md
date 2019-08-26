@@ -1,5 +1,10 @@
-# CommunityJam19
+# Rock Paper Scissors Lies
 A game created for the Community Game Jam with the theme: "The game is a liar"
+
+### You can play the game on this link: WIP
+
+
+
 
 Engine: Unity 2019.3.0a5 Personal
 
