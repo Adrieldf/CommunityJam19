@@ -6,6 +6,16 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+    /* DISCLAIMER:
+     * I know, I know,
+     * it's all a big one god script and that's bad (really bad),
+     * but I ain't got that much time to make this game so for now it goes as this.
+     * Just a reminder if you look at this and please don't judge me like that LOL.
+     * Thanks for checking the code btw.
+     * 
+     * May the force be with you
+     */
+
     #region Help Variables
     public enum HandType
     {
@@ -48,6 +58,8 @@ public class GameController : MonoBehaviour
     private GameObject PlayerPaperSpeak = null;
     [SerializeField]
     private GameObject PlayerScissorsSpeak = null;
+    [SerializeField]
+    private Animator PlayerAnimator = null;
     #endregion
 
     #region Enemy
@@ -57,6 +69,9 @@ public class GameController : MonoBehaviour
     private GameObject EnemyPaperSpeak = null;
     [SerializeField]
     private GameObject EnemyScissorsSpeak = null;
+    [SerializeField]
+    private Animator EnemyAnimator = null;
+
     #endregion
 
     #region UI
@@ -72,20 +87,18 @@ public class GameController : MonoBehaviour
     private TextMeshProUGUI TipText = null;
     [SerializeField]
     private TextMeshProUGUI CountDownText = null;
+    [SerializeField]
+    private TextMeshProUGUI ResultText = null;
     #endregion
 
     private float TimeRemaining = 0f;
     private bool TimerRunning = false;
     private HandType PlayerSelected = HandType.None;
     private HandType EnemySelected = HandType.None;
-
-
+    private string resultText = string.Empty;
     void Start()
     {
-        ShowPlayerSelected(HandType.None);
-        ShowEnemySelected(HandType.None);
-        SetButtons(true);
-        StartCounter(10f);
+        StartRound();
     }
     void Update()
     {
@@ -101,12 +114,14 @@ public class GameController : MonoBehaviour
                 TipPanel.SetActive(false);
                 CountDownText.gameObject.SetActive(false);
                 TimerRunning = false;
+                if (PlayerSelected == HandType.None)
+                    CalculateEnemyPick();
             }
         }
     }
     public void SetRandomTip()
     {
-        TipText.text = Tips[Random.Range(0, 2 /*Tips.Count*/)];
+        TipText.text = Tips[Random.Range(0, Tips.Count)];
     }
     public void SetButtons(bool active)
     {
@@ -132,6 +147,7 @@ public class GameController : MonoBehaviour
         CountDownText.gameObject.SetActive(true);
         if (time > 9)
         {
+            ResultText.gameObject.SetActive(false);
             TipPanel.SetActive(true);
             SetRandomTip();
         }
@@ -139,28 +155,64 @@ public class GameController : MonoBehaviour
     public void OnRockClick()
     {
         PlayerSelected = HandType.Rock;
+        CalculateEnemyPick();
     }
     public void OnPaperClick()
     {
         PlayerSelected = HandType.Paper;
+        CalculateEnemyPick();
     }
     public void OnScissorsClick()
     {
         PlayerSelected = HandType.Scissors;
+        CalculateEnemyPick();
     }
 
     public void EndRound()
     {
+        TimeRemaining = 0f;
         ShowEnemySelected(EnemySelected);
         ShowPlayerSelected(PlayerSelected);
+        PlayerSelected = HandType.None;
+        EnemySelected = HandType.None;
+        ResultText.text = resultText;
+        ResultText.gameObject.SetActive(true);
+        SetButtons(false);
+        StartCoroutine(Wait(2));
     }
+    IEnumerator Wait(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        StartRound();
 
+    }
+    public void StartRound()
+    {
+        ShowPlayerSelected(HandType.None);
+        ShowEnemySelected(HandType.None);
+        SetButtons(true);
+        StartCounter(10f);
+
+    }
     public void CalculateEnemyPick()
     {
-        if(PlayerSelected == HandType.None)
+        ResultText.gameObject.SetActive(false);
+        if (PlayerSelected == HandType.None)
         {
-            //game over, I think?
-
+            int pick = Random.Range(0, 3);
+            switch (pick)
+            {
+                default:
+                case 0:
+                    PlayerSelected = HandType.Rock;
+                    break;
+                case 1:
+                    PlayerSelected = HandType.Paper;
+                    break;
+                case 2:
+                    PlayerSelected = HandType.Scissors;
+                    break;
+            }
         }
         //Well, the jam theme was "The Game Is A Liar", it's not my fault ¯\_(ツ)_/¯
         int chance = Random.Range(0, 20);
@@ -173,12 +225,16 @@ public class GameController : MonoBehaviour
                 EnemySelected = HandType.Scissors;
             else //PlayerSelected == HandType.Scissors
                 EnemySelected = HandType.Paper;
+            resultText = "Victory!!";
+            EnemyAnimator.SetTrigger("mad");
+            PlayerAnimator.SetTrigger("happy");
 
         }
         else if (chance < 19 && chance > 6) //60%
         {
             //tie
             EnemySelected = PlayerSelected;
+            resultText = "It's a tie!";
         }
         else
         {
@@ -189,6 +245,9 @@ public class GameController : MonoBehaviour
                 EnemySelected = HandType.Paper;
             else //PlayerSelected == HandType.Scissors
                 EnemySelected = HandType.Rock;
+            resultText = "Try again";
+            EnemyAnimator.SetTrigger("happy");
+            PlayerAnimator.SetTrigger("mad");
         }
 
         EndRound();
