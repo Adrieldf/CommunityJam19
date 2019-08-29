@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -89,8 +90,12 @@ public class GameController : MonoBehaviour
     private TextMeshProUGUI CountDownText = null;
     [SerializeField]
     private TextMeshProUGUI ResultText = null;
+    [SerializeField]
+    private TextMeshProUGUI PickYourHand = null;
     #endregion
 
+    [SerializeField]
+    private float RoundTime = 10f;
     private float TimeRemaining = 0f;
     private bool TimerRunning = false;
     private HandType PlayerSelected = HandType.None;
@@ -148,6 +153,7 @@ public class GameController : MonoBehaviour
         if (time > 9)
         {
             ResultText.gameObject.SetActive(false);
+            PickYourHand.gameObject.SetActive(true);
             TipPanel.SetActive(true);
             SetRandomTip();
         }
@@ -173,8 +179,7 @@ public class GameController : MonoBehaviour
         TimeRemaining = 0f;
         ShowEnemySelected(EnemySelected);
         ShowPlayerSelected(PlayerSelected);
-        PlayerSelected = HandType.None;
-        EnemySelected = HandType.None;
+        PickYourHand.gameObject.SetActive(false);
         ResultText.text = resultText;
         ResultText.gameObject.SetActive(true);
         SetButtons(false);
@@ -188,10 +193,12 @@ public class GameController : MonoBehaviour
     }
     public void StartRound()
     {
+        PlayerSelected = HandType.None;
+        EnemySelected = HandType.None;
         ShowPlayerSelected(HandType.None);
         ShowEnemySelected(HandType.None);
         SetButtons(true);
-        StartCounter(10f);
+        StartCounter(RoundTime);
 
     }
     public void CalculateEnemyPick()
@@ -199,6 +206,7 @@ public class GameController : MonoBehaviour
         ResultText.gameObject.SetActive(false);
         if (PlayerSelected == HandType.None)
         {
+            //pega um aleatorio caso nao tenha selecionado nenhum
             int pick = Random.Range(0, 3);
             switch (pick)
             {
@@ -251,6 +259,10 @@ public class GameController : MonoBehaviour
         }
 
         EndRound();
+    }
+    public void OpenMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 
 }
