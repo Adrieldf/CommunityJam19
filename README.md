@@ -1,7 +1,7 @@
 # Rock Paper Scissors Lies
 A game created for the Community Game Jam with the theme: "The game is a liar"
 
-### You can play the game on this link: WIP
+### You can play the game on this link: https://adrieldf.itch.io/rock-paper-scissors-lies
 
 
 
