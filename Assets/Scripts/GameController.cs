@@ -37,7 +37,7 @@ public class GameController : MonoBehaviour
         "Go for SCISSORS, trust me",
         "Go for PAPER, trust me",
         "Go for ROCK, trust me",
-        "I actually don't know this turn",
+        "I actually don't know how to help you this turn",
         "Maybe you should trust yourself more",
         "This turn is on yours",
         "The other guy is really good at this, maybe ROCK now?",
