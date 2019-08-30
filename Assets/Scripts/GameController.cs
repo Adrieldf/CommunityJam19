@@ -224,7 +224,7 @@ public class GameController : MonoBehaviour
         }
         //Well, the jam theme was "The Game Is A Liar", it's not my fault ¯\_(ツ)_/¯
         int chance = Random.Range(0, 20);
-        if (chance == 19) //5%
+        if (chance == 19 || chance == 18 || chance == 17) //15%
         {
             //victory
             if (PlayerSelected == HandType.Paper)
@@ -238,7 +238,7 @@ public class GameController : MonoBehaviour
             PlayerAnimator.SetTrigger("happy");
 
         }
-        else if (chance < 19 && chance > 6) //60%
+        else if (chance < 17 && chance > 6) //45%
         {
             //tie
             EnemySelected = PlayerSelected;
