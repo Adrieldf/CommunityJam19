@@ -92,6 +92,14 @@ public class GameController : MonoBehaviour
     private TextMeshProUGUI ResultText = null;
     [SerializeField]
     private TextMeshProUGUI PickYourHand = null;
+    [SerializeField]
+    private GameObject HelpPanel = null;
+    [SerializeField]
+    private TextMeshProUGUI Wins = null;
+    [SerializeField]
+    private TextMeshProUGUI Losses = null;
+    [SerializeField]
+    private TextMeshProUGUI Ties = null;
     #endregion
 
     [SerializeField]
@@ -103,7 +111,16 @@ public class GameController : MonoBehaviour
     private string resultText = string.Empty;
     void Start()
     {
-        StartRound();
+        Wins.text = PlayerPrefs.GetInt("Wins", 0).ToString();
+        Losses.text = PlayerPrefs.GetInt("Losses", 0).ToString();
+        Ties.text = PlayerPrefs.GetInt("Ties", 0).ToString();
+        ShowPlayerSelected(HandType.None);
+        ShowEnemySelected(HandType.None);
+        TipPanel.SetActive(false);
+        CountDownText.gameObject.SetActive(false);
+        SetButtons(false);
+        //  StartRound();
+        HelpPanel.SetActive(true);
     }
     void Update()
     {
@@ -123,6 +140,11 @@ public class GameController : MonoBehaviour
                     CalculateEnemyPick();
             }
         }
+    }
+    public void StartGame()
+    {
+        HelpPanel.SetActive(false);
+        StartRound();
     }
     public void SetRandomTip()
     {
@@ -176,6 +198,9 @@ public class GameController : MonoBehaviour
 
     public void EndRound()
     {
+        Wins.text = PlayerPrefs.GetInt("Wins", 0).ToString();
+        Losses.text = PlayerPrefs.GetInt("Losses", 0).ToString();
+        Ties.text = PlayerPrefs.GetInt("Ties", 0).ToString();
         TimeRemaining = 0f;
         ShowEnemySelected(EnemySelected);
         ShowPlayerSelected(PlayerSelected);
@@ -193,6 +218,9 @@ public class GameController : MonoBehaviour
     }
     public void StartRound()
     {
+        Wins.text = PlayerPrefs.GetInt("Wins", 0).ToString();
+        Losses.text = PlayerPrefs.GetInt("Losses", 0).ToString();
+        Ties.text = PlayerPrefs.GetInt("Ties", 0).ToString();
         PlayerSelected = HandType.None;
         EnemySelected = HandType.None;
         ShowPlayerSelected(HandType.None);
@@ -236,6 +264,7 @@ public class GameController : MonoBehaviour
             resultText = "Victory!!";
             EnemyAnimator.SetTrigger("mad");
             PlayerAnimator.SetTrigger("happy");
+            PlayerPrefs.SetInt("Wins", PlayerPrefs.GetInt("Wins", 0) + 1);
 
         }
         else if (chance < 17 && chance > 6) //45%
@@ -243,6 +272,7 @@ public class GameController : MonoBehaviour
             //tie
             EnemySelected = PlayerSelected;
             resultText = "It's a tie!";
+            PlayerPrefs.SetInt("Ties", PlayerPrefs.GetInt("Ties", 0) + 1);
         }
         else
         {
@@ -256,6 +286,7 @@ public class GameController : MonoBehaviour
             resultText = "Try again";
             EnemyAnimator.SetTrigger("happy");
             PlayerAnimator.SetTrigger("mad");
+            PlayerPrefs.SetInt("Losses", PlayerPrefs.GetInt("Losses", 0) + 1);
         }
 
         EndRound();
