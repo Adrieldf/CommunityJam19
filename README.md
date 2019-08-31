@@ -10,11 +10,9 @@ Engine: Unity 2019.3.0a5 Personal
 
 Font: https://www.dafont.com/pt/aldo-the-apache.font?l[]=10&l[]=1
 
-Music:
-
-Sound FX:
+Sounds: Bosca Ceoil
 
 Art: Aseprite
 
-All other game content and/or art was made by me during the jam time!
+All game content and art was made by me during the jam time!
 
